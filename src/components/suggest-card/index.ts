@@ -1,0 +1,1 @@
+export { default as SuggestCard } from './suggest-card-container';  
