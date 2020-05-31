@@ -11,7 +11,12 @@ const FormContainer = styled.form`
 `;
 
 const FadeInDiv = styled.div`
-  opacity: 0;
+  opacity: ${props => {
+    switch(props.activeSuggestion) {
+      case props.activeSuggestion && !Object.keys(props.activeSuggestion).length: return 1;
+      default: return 0;
+    } 
+  }};
   display: block;
   animation: slidein 1s ease-out forwards;
 `;
@@ -19,6 +24,11 @@ const FadeInDiv = styled.div`
 const SuggestionHeader = styled.div`
   margin: 20px;
   text-align: left;
+  font-size: 16px;
+
+  p {
+    z-index: 99999;
+  }
 `;
 
 const GenSuggestionButton = styled.button`
@@ -31,7 +41,7 @@ const GenSuggestionButton = styled.button`
 interface ISuggestCardProps {
   activeSuggestion: any;
   addSuggestion: () => void | any;
-  genRandom: () => void | any;
+  genRandom: (e: any) => void | any;
   data: any;
 }
  
@@ -41,11 +51,16 @@ const SuggestCard: React.FC<ISuggestCardProps> = ({
   genRandom,
   data
 }) => {
-  console.log('retrievedSuggestions ', activeSuggestion);
+  const {
+    address,
+    link,
+    name,
+  } = activeSuggestion;
   return <FormContainer style={{ backgroundColor: "white" }}>
     <FadeInDiv>
       <SuggestionHeader>
-        <p>{`this.props.quote`}</p></SuggestionHeader>
+        <p style={{ color: 'black' }}>{name}</p>
+      </SuggestionHeader>
     </FadeInDiv>
     <GenSuggestionButton onClick={genRandom}>
         <p style={{ margin: 0 }}>{`random suggestion`}</p>

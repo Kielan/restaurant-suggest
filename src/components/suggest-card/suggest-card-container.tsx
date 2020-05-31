@@ -20,7 +20,8 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
   const html = document.documentElement;
   html.style.backgroundColor = randomColor;
 
-  const genRandom = () => {
+  const genRandom = (e) => {
+    e.preventDefault();
     const randomElement = data[Math.floor(Math.random() * data.length)];
     setActiveSuggestion(randomElement);
   }
