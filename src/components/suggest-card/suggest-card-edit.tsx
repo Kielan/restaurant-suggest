@@ -31,19 +31,30 @@ const EditorCard = styled.div`
   }
 `;
 
+function handleCardRef(node: any, id: string, cardRefs: Array<string>) {
+    if (node) {
+        cardRefs[id] = node;
+    }
+}
 interface ISuggestCardEditProps {
-    
+    activeFormRefId: string;
+    initialValue: any;
+    position: any;
+    onSaveForm: () => void;
 }
 
 const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
+    activeFormRefId,
     initialValue,
     onSaveForm,
     position,
-    taskId,
 }) => {
+    var suggestCardEditRefList = {
+        'mvpqdf98nt': { id: 'mvpqdf98nt'},
+    };
     return (
         <EditorContainerDiv>
-            <EditorDiv ref={editor} position={position}>
+            <EditorDiv ref={(node) => handleCardRef(node, activeFormRefId, suggestCardEditRefList)} position={position}>
                 <EditorCard>
                     <Form 
                         type='button'

@@ -31,6 +31,13 @@ const SuggestionHeader = styled.div`
   }
 `;
 
+const AddSuggestionButton = styled.button`
+  cursor: pointer;
+  color: blue;
+  text-align: left;
+  z-index: 100;
+`;
+
 const GenSuggestionButton = styled.button`
   cursor: pointer;
   color: blue;
@@ -42,14 +49,20 @@ interface ISuggestCardProps {
   activeSuggestion: any;
   addSuggestion: () => void | any;
   genRandom: (e: any) => void | any;
+  handleCardRef: (node: any, id: any) => void;
   data: any;
+  setFormListRefs: () => void;
+  setActiveFormRefId: () => void;
 }
  
 const SuggestCard: React.FC<ISuggestCardProps> = ({
   activeSuggestion,
   addSuggestion,
   genRandom,
-  data
+  data,
+  handleCardRef,
+  setFormListRefs,
+  setActiveFormRefId,
 }) => {
   const {
     address,
@@ -58,10 +71,16 @@ const SuggestCard: React.FC<ISuggestCardProps> = ({
   } = activeSuggestion;
   return <FormContainer style={{ backgroundColor: "white" }}>
     <FadeInDiv>
-      <SuggestionHeader>
+      <SuggestionHeader
+        ref={(node) => handleCardRef(node, 'ampda92lf')}
+        onClick={() => setActiveFormRefId('ampda92lf')}
+      >
         <p style={{ color: 'black' }}>{name}</p>
       </SuggestionHeader>
     </FadeInDiv>
+    <AddSuggestionButton onClick={addSuggestion}>
+        <p style={{ margin: 0 }}>{`add suggestion`}</p>
+    </AddSuggestionButton>
     <GenSuggestionButton onClick={genRandom}>
         <p style={{ margin: 0 }}>{`random suggestion`}</p>
     </GenSuggestionButton>

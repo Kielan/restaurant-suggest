@@ -43,8 +43,10 @@ const Protected = () => {
       })
   }, [])
 
-  const addSuggestion = () => {
+  const addSuggestion = (e) => {
+    e.preventDefault();
     console.log('add suggestion triggered')
+    
   }
 
   return (
