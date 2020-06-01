@@ -87,16 +87,6 @@ const Form: React.FC<IFormProps> = ({ buttonText, children, initialValue, onClic
   const textarea = React.createRef();
   const input = React.createRef();
 
-  function handleOnChangeText(e: any) {
-    setInputText(e.target.value);
-  }
-
-  function handleOnSubmit(e: any) {
-    e.preventDefault();
-    onClickSubmit(inputText);
-    setInputText('');
-  }
-
   function handleOnKeyDown(e: any) {
     if (e.keyCode === 13 && e.shiftKey === false) {
       handleOnSubmit(e);

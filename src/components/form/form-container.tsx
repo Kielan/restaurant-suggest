@@ -18,6 +18,7 @@ const FormContainer: React.FC<IFormContainerProps> = ({
   placeholder,
   type,
 }) => {
+  
   return <Form 
     buttonText={buttonText}
     initialValue={initialValue}

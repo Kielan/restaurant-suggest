@@ -34,6 +34,7 @@ const Protected = () => {
   
   const [retrievedSuggestions, setRetrievedSuggestions] = React.useState([])
   const [activeSuggestion, setActiveSuggestion] = React.useState({})
+  const [addSuggestionBool, setAddSuggestionBool] = React.useState(false)
 
   React.useEffect(() => {
     fetch("/api/suggestions")
@@ -46,16 +47,26 @@ const Protected = () => {
   const addSuggestion = (e) => {
     e.preventDefault();
     console.log('add suggestion triggered')
-    
+    setAddSuggestionBool(true);
   }
 
+  const cancelEditForm = () => {
+    setAddSuggestionBool(false)
+  }
+
+  const saveEditForm = () => {
+    
+  }
   return (
     <Layout>
       <SEO title="Page two" />
       <SuggestCard
+        addSuggestionBool={addSuggestionBool}
         data={retrievedSuggestions}
         activeSuggestion={activeSuggestion}
         addSuggestion={addSuggestion}
+        cancelEditForm={cancelEditForm}
+        saveEditForm={saveEditForm}
         displayColor={() => "red"}
         setActiveSuggestion={setActiveSuggestion}
       />

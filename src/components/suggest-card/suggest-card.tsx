@@ -52,7 +52,7 @@ interface ISuggestCardProps {
   handleCardRef: (node: any, id: any) => void;
   data: any;
   setFormListRefs: () => void;
-  setActiveFormRefId: () => void;
+  setActiveFormRefId: (id: any) => void;
 }
  
 const SuggestCard: React.FC<ISuggestCardProps> = ({

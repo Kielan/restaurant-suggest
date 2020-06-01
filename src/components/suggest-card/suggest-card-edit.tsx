@@ -40,18 +40,21 @@ interface ISuggestCardEditProps {
     activeFormRefId: string;
     initialValue: any;
     position: any;
+    onCancelEdit: () => void;
     onSaveForm: () => void;
 }
 
 const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
     activeFormRefId,
     initialValue,
+    onCancelEdit,
     onSaveForm,
     position,
 }) => {
     var suggestCardEditRefList = {
         'mvpqdf98nt': { id: 'mvpqdf98nt'},
     };
+
     return (
         <EditorContainerDiv>
             <EditorDiv ref={(node) => handleCardRef(node, activeFormRefId, suggestCardEditRefList)} position={position}>
@@ -62,7 +65,7 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
                         initialValue={initialValue}
                         onClickSubmit={onSaveForm}
                         placeholder={``}
-                        onClickCancel={() => {}}
+                        onClickCancel={onCancelEdit}
                     >
                     </Form>
                 </EditorCard>

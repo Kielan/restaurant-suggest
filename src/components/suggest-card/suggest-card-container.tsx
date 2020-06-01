@@ -4,7 +4,10 @@ import SuggestCardEdit from './suggest-card-edit';
  
 interface ISuggestCardContainerProps {
   activeSuggestion: any;
-  addSuggestion: () => void;
+  addSuggestion: (e: any) => void;
+  addSuggestionBool: boolean;
+  cancelEditForm: () => void;
+  saveEditForm: () => void;
   data: any;
   displayColor: () => any | void;
   setActiveSuggestion: (el: any) => void;
@@ -13,48 +16,53 @@ interface ISuggestCardContainerProps {
 const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({ 
   activeSuggestion,
   addSuggestion,
+  addSuggestionBool,
+  cancelEditForm,
   data,
   displayColor,
+  saveEditForm,
   setActiveSuggestion,
 }) => {
   const randomColor = displayColor();
   const html = document.documentElement;
   html.style.backgroundColor = randomColor;
   const [formListRefs, setFormListRefs] = React.useState({});
-  const [activeFormRefId, setActiveFormRefId] = React.useState(false);
+  const [activeFormRefId, setActiveFormRefId] = React.useState<any>(false);
 
   const genRandom = (e) => {
     e.preventDefault();
     const randomElement = data[Math.floor(Math.random() * data.length)];
     setActiveSuggestion(randomElement);
   }
-//            setFormListRefs={}
-function onChangeActiveCardRefId(id: any) {
-  setActiveFormRefId(id);
-}
 
-function onChangeCardRef(node: any, id: any) {
-  var newRefList = formListRefs;
-  newRefList[id] = node;
-  setFormListRefs(newRefList)
-}
+  function onChangeActiveCardRefId(id: any) {
+    setActiveFormRefId(id);
+  }
+
+  function onChangeFormRef(node: any, id: any) {
+    var newRefList = formListRefs;
+    newRefList[id] = node;
+    setFormListRefs(newRefList)
+  }
 
   return <><SuggestCard 
             activeSuggestion={activeSuggestion}
             addSuggestion={addSuggestion}
             data={data}
             genRandom={genRandom}
-            handleCardRef={onChangeCardRef}
+            handleCardRef={onChangeFormRef}
             setActiveFormRefId={onChangeActiveCardRefId}
           />
-          {activeFormRefId && formListRefs[activeFormRefId] && <SuggestCardEdit 
+          {addSuggestionBool && <SuggestCardEdit 
             activeFormRefId={activeFormRefId}
             formListRefs={formListRefs}
             initialValue={""}
+            onCancelEdit={cancelEditForm}
             position={{
               top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
               left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
             }}
+            onSaveForm={saveEditForm}
           />}</>;
 };
  
