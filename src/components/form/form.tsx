@@ -9,10 +9,10 @@ const FormContainer = styled.form`
   border-radius: 3px;
   width: ${props => {
     switch(props.type) {
-      case 'list': return '275px';
-      case 'editor': return '270px';
-      case 'card': return '250px';
-      default: return '250px';
+      case 'list': return `${props => `${props.theme.form.maxWidth}`}`;
+      case 'editor': return `${props => `${props.theme.form.maxWidth}`}`;
+      case 'card': return `${props => `${props.theme.form.maxWidth}`}`;
+      default: return `${props => `${props.theme.form.maxWidth}`}`;
     }
   }};
   height: fit-content;
@@ -35,7 +35,7 @@ const FormTextArea = styled.textarea`
   border: none;
   overflow: hidden;
   resize: none;
-  width: 250px;
+  width: 35rem;
   outline: none;
 `;
 
@@ -74,18 +74,34 @@ const CancelIconStyled = styled(CancelIcon)`
 
 interface IFormProps {
   buttonText: string;
+  children?: any;
   initialValue: any;
   onClickCancel: () => void;
   onClickSubmit: (inputText: any) => void;
   placeholder: string;
   type?: "text" | "button" | "submit" | "reset";
+  setValue?: (val: string) => void;
+  value?: string;
 }
  
-const Form: React.FC<IFormProps> = ({ buttonText, children, initialValue, onClickCancel, onClickSubmit, placeholder, type }) => {
+const Form: React.FC<IFormProps> = ({ buttonText, children, initialValue, onClickCancel, onClickSubmit, placeholder, type, setValue }) => {
   const [inputText, setInputText] = React.useState(initialValue || '');
   const form = React.createRef();
   const textarea = React.createRef();
   const input = React.createRef();
+
+  function handleOnChangeText(e: any) {
+    setInputText(e.target.value);
+    if(setValue) {
+      setValue(e.target.value);
+    }
+  }
+
+  function handleOnSubmit(e: any) {
+    e.preventDefault();
+    onClickSubmit(inputText);
+    setInputText('');
+  }
 
   function handleOnKeyDown(e: any) {
     if (e.keyCode === 13 && e.shiftKey === false) {
@@ -122,18 +138,19 @@ const Form: React.FC<IFormProps> = ({ buttonText, children, initialValue, onClic
           {...options}
           ref={input}
         /> 
-      : <FormTextArea
+      : <><FormTextArea
           {...options} 
           ref={textarea} 
           editor={type === "editor"}
           formHasHeader={children ? true : false}
           onKeyDown={handleOnKeyDown} 
         />
+        { children }</>
     } 
     <ButtonsContainer>
       <Button 
         text={buttonText}
-        onClick={handleOnSubmit}
+        onClick={e => handleOnSubmit(e)}
         icon={''}
         type={type}
       />

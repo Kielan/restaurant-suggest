@@ -5,42 +5,54 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import React from "react";
+import styled from 'styled-components';
+import PropTypes from "prop-types";
+import { useStaticQuery, graphql } from "gatsby";
+import "./layout.css";
+import { ThemeProvider } from "./theme-provider";
 
-import Header from "./header"
-import "./layout.css"
+const StyledMain = styled.main`
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+`;
 
 const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
+  // const data = useStaticQuery(graphql`
+  //   query SiteTitleQuery {
+  //     site {
+  //       siteMetadata {
+  //         title
+  //       }
+  //     }
+  //   }
+  // `)
 
   return (
-    <>
-      <Header siteTitle={data.site.siteMetadata.title} />
+    <ThemeProvider>
       <div
         style={{
-          margin: `0 auto`,
+          height: '100%',
+          marginTop: `6.0875rem`,
+          margin: `1.0875rem 0 auto`,
           maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
+          padding: `1.0875rem 1.45rem 1.0875rem 1.45rem`,
+          flexDirection: 'column',
+         // alignItems: 'center',
+          justifyContent: 'flex-start',
+          display: 'flex',
+          alignSelf: 'center',
         }}
       >
-        <main>{children}</main>
+        <StyledMain>{children}</StyledMain>
         <footer>
           © {new Date().getFullYear()}, Built with
           {` `}
           <a href="https://www.gatsbyjs.org">Gatsby</a>
         </footer>
       </div>
-    </>
+    </ThemeProvider>
   )
 }
 

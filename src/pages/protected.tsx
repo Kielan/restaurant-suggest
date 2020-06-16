@@ -1,78 +1,44 @@
-import React from "react"
-import { Link } from "gatsby"
-import { Server, Model } from "miragejs"
-
-import Layout from "../components/layout"
-import SEO from "../components/seo"
-import { SuggestCard } from '../components/suggest-card'
+import React from "react";
+import { Link } from "gatsby";
+import Layout from "../components/layout";
+import SEO from "../components/seo";
+import { SuggestCard } from '../components/suggest-card';
+import axios from 'axios';
 
 const Protected = () => {
-
-  const ServerInstance = new Server({
-    models: {
-      suggestion: Model
-    },
-  
-    routes() {
-      this.namespace = "api";
-  
-      this.get("/suggestions", schema => {
-        return {
-          suggestions: [
-            { id: "1", name: "namea", address: "", link: "" },
-            { id: "2", name: "nameb", address: "", link: "" },
-          ]
-        }
-      });
-  
-      this.post('/suggestions', (schema, request) => {
-        let attrs = JSON.parse(request.requestBody);
-        return schema.suggestions.create(attrs);
-      });
-    }
-  })
-  
   const [retrievedSuggestions, setRetrievedSuggestions] = React.useState([])
   const [activeSuggestion, setActiveSuggestion] = React.useState({})
   const [addSuggestionBool, setAddSuggestionBool] = React.useState(false)
 
-  React.useEffect(() => {
-    fetch("/api/suggestions")
-      .then((res) => res.json())
-      .then((json) => {
-        setRetrievedSuggestions(json.suggestions)
-      })
-  }, [])
-
-  const addSuggestion = (e) => {
-    e.preventDefault();
+  const addSuggestion = () => {
     console.log('add suggestion triggered')
     setAddSuggestionBool(true);
   }
 
-  const cancelEditForm = () => {
-    setAddSuggestionBool(false)
+  const closeEditForm = () => {
+    setAddSuggestionBool(false);
   }
 
-  const saveEditForm = () => {
-    
+  const onChangeData = (data: any[]) => {
+    setRetrievedSuggestions(data);
   }
+
   return (
     <Layout>
       <SEO title="Page two" />
+      <Link to="/">Go back to the homepage</Link>
       <SuggestCard
         addSuggestionBool={addSuggestionBool}
         data={retrievedSuggestions}
         activeSuggestion={activeSuggestion}
         addSuggestion={addSuggestion}
-        cancelEditForm={cancelEditForm}
-        saveEditForm={saveEditForm}
-        displayColor={() => "red"}
+        closeEditForm={closeEditForm}
+        displayColor={() => "black"}
+        onChangeData={onChangeData}
         setActiveSuggestion={setActiveSuggestion}
       />
-      <Link to="/">Go back to the homepage</Link>
     </Layout>
   )
 }
 
-export default Protected
+export default Protected;

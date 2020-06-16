@@ -7,7 +7,10 @@
 // You can delete this file if you're not using it
   
 import React from "react"
-import { silentAuth } from "./src/utils/auth"
+//import { silentAuth } from "./src/utils/auth"
+
+// import MirageMockServer from './src/mirage-mock-server'
+// const server = MirageMockServer();
 
 class SessionCheck extends React.Component {
   constructor(props) {
@@ -18,14 +21,17 @@ class SessionCheck extends React.Component {
   }
 
   handleCheckSession = () => {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   }
 
   componentDidMount() {
-   silentAuth(this.handleCheckSession)
+    this.setState({ loading: false });
+
+    // silentAuth(this.handleCheckSession);
   }
 
   render() {
+
     return (
       this.state.loading === false && (
         <React.Fragment>{this.props.children}</React.Fragment>

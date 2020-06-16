@@ -1,0 +1,1 @@
+export { default as ReactGooglePlacesSearch } from './react-google-places-search'

@@ -12,16 +12,17 @@ require("dotenv").config({
 // Implement the Gatsby API “onCreatePage”. This is
 // called after every page is created.
 exports.onCreatePage = async ({ page, actions }) => {
-    const { createPage } = actions
-  
+    const { createPage } = actions;
+    console.log('kdl gatsby-node check');
+
     // page.matchPath is a special key that's used for matching pages
     // only on the client.
     if (page.path.match(/^\/protected/)) {
       page.matchPath = "/protected/*"
   
       // Update the page.
-      createPage(page)
-    }
+      createPage(page);
+    };
   }
 
 // ./gatsby-node.js
