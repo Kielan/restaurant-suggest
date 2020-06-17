@@ -66,7 +66,7 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
   };
   
   const returnSuggestions = async () => {
-    const getSuggestions = await api.getSuggestions();
+    const getSuggestions = await api.fetchGetSuggestions();
     // .then(res => res.suggestions);
     console.log('inapp pretenderRes ', getSuggestions);
     return getSuggestions;

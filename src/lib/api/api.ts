@@ -1,11 +1,23 @@
 import axios from 'axios';
 
+export const fetchGetSuggestions = async () => {
+        return fetch(`/api/suggestions`)
+            .then(response => {
+                console.log('response ', response);
+                return response.text();
+            }) // parse JSON from request
+            .then(resultData => {
+            console.log('resultData ', resultData)
+            return resultData.suggestions;
+            }) // set data for the number of stars
+}
 export const getSuggestions = async () => {
     try {
         const suggestions = await axios.get("/api/suggestions", {
             headers: {
+            "Access-Control-Allow-Origin": "application/json",
             "Accept": "application/json",
-            "content-type": "application/json"
+            "Content-Type": "application/json",
         }})
         .then((pretenderResponse) => {
             return pretenderResponse &&

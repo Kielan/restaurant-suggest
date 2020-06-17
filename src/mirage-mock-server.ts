@@ -65,7 +65,7 @@ export function MirageMockServer({ environment = "development" } = {}): Schema<A
         routes() {
             //this.passthrough() must be in routes before this.namespace
             //just because of miragejs architecture
-            this.passthrough('http://localhost:8000/page-data/**');
+            this.passthrough('localhost:8000/page-data/**');
             this.namespace = "api"
 
             function errorCatch(e: any): any {

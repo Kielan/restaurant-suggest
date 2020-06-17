@@ -9,6 +9,7 @@
     "@pacote/eslint-config": "^3.0.1",
     "@pacote/eslint-config-jest": "^1.0.6",
     "@pacote/eslint-config-react": "^1.1.0",
+    "@react-simply/state": "^1.0.2",
     "@types/auth0-js": "^9.13.1",
     "@types/faker": "^4.1.12",
     "@types/jest": "^25.2.3",
