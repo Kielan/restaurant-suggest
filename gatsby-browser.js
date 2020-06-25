@@ -9,9 +9,6 @@
 import React from "react"
 //import { silentAuth } from "./src/utils/auth"
 
-// import MirageMockServer from './src/mirage-mock-server'
-// const server = MirageMockServer();
-
 class SessionCheck extends React.Component {
   constructor(props) {
     super(props)

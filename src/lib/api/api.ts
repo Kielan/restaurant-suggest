@@ -1,10 +1,15 @@
 import axios from 'axios';
 
 export const fetchGetSuggestions = async () => {
-        return fetch(`/api/suggestions`)
-            .then(response => {
+        return fetch(`/api/suggestions`, {
+            method: `GET`,
+            headers: {
+              "Content-Type": `application/json`,
+            }, 
+        })
+        .then(response => {
                 console.log('response ', response);
-                return response.text();
+                return response.json();
             }) // parse JSON from request
             .then(resultData => {
             console.log('resultData ', resultData)

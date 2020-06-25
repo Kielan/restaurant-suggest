@@ -5,15 +5,13 @@ import SEO from "../components/seo";
 import { SuggestCard } from '../components/suggest-card';
 import { StateProvider } from '@react-simply/state';
 import axios from 'axios';
+import MirageMockServer from '../mirage-mock-server';
 
 const Protected = () => {
   const [retrievedSuggestions, setRetrievedSuggestions] = React.useState([])
   const [activeSuggestion, setActiveSuggestion] = React.useState({})
   const [addSuggestionBool, setAddSuggestionBool] = React.useState(false)
-  const APIContext = React.createContext("light");
-  const initialState = {
-    suggestions: [],
-  };
+  const serverAPI = MirageMockServer();
 
   const addSuggestion = () => {
     console.log('add suggestion triggered')
@@ -28,6 +26,11 @@ const Protected = () => {
     setRetrievedSuggestions(data);
   }
 
+  const onChangeActiveSuggestion = (data: any) => {
+    console.log('proteced/onChangeActiveSuggestion ', data);
+    setActiveSuggestion(data);
+  }
+
   const reducer = (state, action) => {
     switch(action.type) {
       case 'set':
@@ -39,22 +42,22 @@ const Protected = () => {
           return state;
     }
   };
-
+//<StateProvider initialState={serverAPI} reducer={reducer}>
   return (
-      <Layout>
-        <SEO title="Page two" />
-        <Link to="/">Go back to the homepage</Link>
-        <SuggestCard
-          addSuggestionBool={addSuggestionBool}
-          data={retrievedSuggestions}
-          activeSuggestion={activeSuggestion}
-          addSuggestion={addSuggestion}
-          closeEditForm={closeEditForm}
-          displayColor={() => "black"}
-          onChangeData={onChangeData}
-          setActiveSuggestion={setActiveSuggestion}
-        />
-      </Layout>
+        <Layout>
+          <SEO title="Page two" />
+          <Link to="/">Go back to the homepage</Link>
+          <SuggestCard
+            activeSuggestion={activeSuggestion}
+            addSuggestion={addSuggestion}
+            addSuggestionBool={addSuggestionBool}
+            closeEditForm={closeEditForm}
+            data={retrievedSuggestions}
+            displayColor={() => "black"}
+            onChangeData={onChangeData}
+            onChangeActive={onChangeActiveSuggestion}
+          />
+        </Layout>
   )
 }
 

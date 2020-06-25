@@ -1,12 +1,13 @@
 import * as React from 'react';
 import SuggestCard from './suggest-card';
 import SuggestCardEdit from './suggest-card-edit';
+import { SuggestCardDisplay } from '../suggest-card-display';
 import axios from 'axios';
 import * as api from '../../lib/api/api';
 import { string } from 'prop-types';
 
 function useHookWithRefCallback() {
-  const ref = React.useRef(null)
+  const ref = React.useRef(null);
   const setRef = React.useCallback(node => {
     // Save a reference to the node
     ref.current = node;
@@ -37,9 +38,13 @@ interface ISuggestCardContainerProps {
   data?: any;
   displayColor: () => any | void;
   onChangeData?: (data: any) => void;
-  setActiveSuggestion: (el: any) => void;
+  onChangeActive: (data: any) => void;
 }
 
+/*
+  This component features a test suite with ref component
+  and lastActiveUpdateItem pattern in react
+*/
 const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({ 
   activeSuggestion,
   addSuggestion,
@@ -47,91 +52,96 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
   closeEditForm,
   data,
   displayColor,
+  onChangeActive,
   onChangeData,
-  setActiveSuggestion,
 }) => {
   const randomColor = displayColor();
   const html = document.documentElement;
   html.style.backgroundColor = randomColor;
   const [formListRefs, setFormListRefs] = React.useState<any>({'e3p40592md': { id: 'e3p40592md'}});
-  const [activeFormRefId, setActiveFormRefId] = React.useState<any>('e3p40592md');
-  const [formVars, setFormVars] = React.useState<IFormLocationProps>({});
+  const [activeFormRefId, setActiveFormRefId] = React.useState<string>('e3p40592md');
+  const [formVars, setFormVars] = React.useState<IFormLocationProps | any>({});
   const [formTextVal, setFormTextVal] = React.useState<any>('');
   const [formSuggestions, setFormSuggestions] = React.useState<any>('');
-  //const [retrievedSuggestions, setRetrievedSuggestions] = React.useState([]);
+  const [lastActiveUpdateItem, setLastActiveUpdateItem] = React.useState<any>();
 
   const [hookRef, setRef] = useHookWithRefCallback();
+
   var suggestCardRefList = {
     'e3p40592md': { id: 'e3p40592md'},
   };
   
   const returnSuggestions = async () => {
     const getSuggestions = await api.fetchGetSuggestions();
-    // .then(res => res.suggestions);
-    console.log('inapp pretenderRes ', getSuggestions);
     return getSuggestions;
   }
 
-  const onSubmitSuggestCardEdit = React.useCallback(async () => {
-    console.log('add suggestion triggered select triggered ', formVars);
-    const postResult = await axios.post('/suggestions', {
-      ...formVars
+  const postSuggestion = async (formVars: any) => {
+    const postSuggestionsResponse = await axios.post('/api/suggestions', {
+      data: { ...formVars },
+      config: {
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          // @ts-ignore
+        },
+      }
     });
-    console.log('end usecallback ', postResult);
-    closeEditForm();
-  }, [axios, formVars, closeEditForm]);
-
-  React.useEffect(() => {
-    returnSuggestions().then((returnedSuggestions) => {
-      console.log('axios finish ', returnedSuggestions);
-      // @ts-ignore
-      // setRetrievedSuggestions(returnedSuggestions);
-      //can't use onChange via props or within this method?
-      //onChange() would wrap setRetrievedSuggestions but causes an infinite render loop.
-      // @ts-ignore
-      onChangeData(returnedSuggestions);
-    });
-  }, [activeSuggestion, addSuggestionBool, formListRefs, formVars, formTextVal, formSuggestions]);
-
-  const suggestionsReducer = (state, action) => {
-    switch (action.type) {
-      case 'SET_SUGGESTIONS':
-        return [
-          ...state, {
-            ...action.suggestion,
-          }
-        ];
-      default:
-       return state;
-    }
+    return postSuggestionsResponse;
   }
 
- // const [suggestions, suggestionsDispatch] = React.useReducer(todoReducer, initialTodos);
+  const onSubmitSuggestCardEdit = React.useCallback(async (suggestion: any) => {
 
+    return new Promise(function(resolve, reject) {
+      resolve(onChangeFormVars(suggestion));
+    }).then(async () => {
+      const postResult = await axios.post('/api/suggestions', {
+        data: { ...formVars }
+      });
+      setLastActiveUpdateItem(formVars);
+    }).then(() => {
+      closeEditForm();
+    })
+  }, [axios, formVars, closeEditForm]);
+
+  //this should send a post request after the hook is updated
+  React.useEffect(() => {
+    if (Object.keys(formVars).length > 0 && formVars.constructor === Object) {
+      postSuggestion(formVars).then((returnedSuggestions) => {});
+    }
+  }, [activeFormRefId, formListRefs, formTextVal, formSuggestions, formVars]);
+
+  //HTTP get all saved suggestions when lastActiveUpdateItem changes 
+  //and on first load
+  React.useEffect(() => {
+      returnSuggestions().then((returnedSuggestions) => {
+        // @ts-ignore
+        onChangeData(returnedSuggestions);
+      });
+  }, [lastActiveUpdateItem]);
+  
   const genRandom = (e) => {
     e.preventDefault();
     const randomElement = data[Math.floor(Math.random() * data.length)];
-    console.log('getrandom test activesuggestions ', data);
-    setActiveSuggestion(randomElement);
+    console.log('suggestcardcontainer/genRandom ', data);
+
+    onChangeActive(randomElement);
   }
 
-  function onChangeFormVars(val: any) {
+  const onChangeFormVars = (val: any) => {
     //remove prop from object
     delete val.matched_substrings
     delete val.structured_formatting.main_text_matched_substrings
-    
+
     setFormVars(val);
   }
 
   function onChangeFormInput(val: string) {
-    console.log('kdl onChangeFormInput ', val)
-    setFormTextVal(val)
+    setFormTextVal(val);
   }
 
   function onChangeActiveCardRefId(id: any) {
-    console.log('container changeactivecard ', id);
     setActiveFormRefId(id);
-    console.log('onChangeActiveCardRefId ', activeFormRefId)
   }
 
   function onChangeFormRef(node: any, id: any) {
@@ -140,30 +150,37 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
     setFormListRefs(newRefList);
   }
 
-  console.log('cardcontainer ', formListRefs[activeFormRefId]);
   return <><SuggestCard 
             activeFormRefId={activeFormRefId}
-            activeSuggestion={activeSuggestion}
             addSuggestion={addSuggestion}
             data={data}
             formSuggestions={formSuggestions}
             genRandom={genRandom}
             handleFormRef={onChangeFormRef}
           />
-          {addSuggestionBool && formListRefs[activeFormRefId] &&
           <SuggestCardEdit
+            activeFormRefId={activeFormRefId}
+            addSuggestionBool={addSuggestionBool}
+            formListRefs={formListRefs}
             initialValue={""}
             onCancelEdit={closeEditForm}
             position={{
               top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
               left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
             }}
-            onChangeFormVars={onChangeFormVars}
             onSubmitForm={onSubmitSuggestCardEdit}
             hookRef={hookRef}
             formTextVal={formTextVal}
             onChangeFormInput={onChangeFormInput}
-          />}</>; 
+          />
+          <SuggestCardDisplay
+              activeSuggestion={activeSuggestion}
+              hookRef={hookRef}
+              position={{
+                top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
+                left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
+              }}
+          /></>;
 };
  
 export default SuggestCardContainer;

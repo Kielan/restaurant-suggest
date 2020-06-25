@@ -65,7 +65,8 @@ export function MirageMockServer({ environment = "development" } = {}): Schema<A
         routes() {
             //this.passthrough() must be in routes before this.namespace
             //just because of miragejs architecture
-            this.passthrough('localhost:8000/page-data/**');
+            this.namespace = "api"
+            this.passthrough('localhost:8000/page-data/');
             this.namespace = "api"
 
             function errorCatch(e: any): any {
@@ -105,14 +106,17 @@ export function MirageMockServer({ environment = "development" } = {}): Schema<A
                   
                 const headers = {};
 
+                console.log('post request attrs ', request);
+
                 let attrs = JSON.parse(request.requestBody);
+                console.log('post request JSON.parse ', attrs);
 
                 try {
                     if (isEmpty(attrs)) {
                         server.create("suggestion");
                     } else {
                         server.create("suggestion", {
-                            ...attrs
+                            ...attrs.data
                         });
                     }
                 } catch(e) {

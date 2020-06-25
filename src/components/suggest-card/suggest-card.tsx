@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { theme } from '../theme-provider';
 
 const Button = styled.button`
   font-weight: 600;
@@ -38,7 +39,9 @@ const FormContainer = styled.form`
 
 const FadeInDiv = styled.div`
   opacity: ${props => {
+      // @ts-ignore
     switch(props.activeSuggestion) {
+      // @ts-ignore
       case props.activeSuggestion && !Object.keys(props.activeSuggestion).length: return 1;
       default: return 0;
     } 
@@ -119,42 +122,30 @@ const GenSuggestionButton = styled.button`
   }
 `;
 
-interface ISuggestCardProps {
+export interface ISuggestCardProps {
   activeFormRefId: string;
-  activeSuggestion?: any;
   addSuggestion: () => void | any;
   formListRefs?: any;
   formSuggestions?: any;
   genRandom: (e: any) => void | any;
   handleCardRef?: (node: any, id: string) => void;
-  data: any;
+  data: any[];
   onChangeHookRef?: () => void;
   handleFormRef: (node: any, id: any) => void;
+  theme?: any;
 }
- 
+
 const SuggestCard: React.FC<ISuggestCardProps> = ({
   activeFormRefId,
-  activeSuggestion,
   addSuggestion,
   data,
-  formSuggestions,
   genRandom,
   handleFormRef,
 }) => {
-  console.log('random gen activeSuggestion ', activeSuggestion);
-  const {
-    address,
-    link,
-    description,
-  } = activeSuggestion;
-  const onPressAddSuggestion = (e) => {
+  const onPressAddSuggestion = (e: any) => {
     e.preventDefault();
     addSuggestion();
   }
-  var suggestCardRefList = {
-    'e3p40592md': { id: 'e3p40592md'},
-    'oocs34kl': { id: 'oocs34kl'},
-  };
 
   function handleComponentRef(node: any, id: string) {
     handleFormRef(node, id);
@@ -167,9 +158,8 @@ const SuggestCard: React.FC<ISuggestCardProps> = ({
               ref={(node) => handleComponentRef(node, 'e3p40592md')}
             >
               <FadeInDiv>
-                <SuggestionHeaderDiv
-                >
-                  <p style={{ color: 'black', minHeight: '26px' }}>{description}</p>
+                <SuggestionHeaderDiv>
+                  <p style={{ color: 'black', minHeight: '26px' }}>{}</p>
                 </SuggestionHeaderDiv>
               </FadeInDiv>
             </FormContainer>
@@ -183,6 +173,10 @@ const SuggestCard: React.FC<ISuggestCardProps> = ({
             </ButtonLayoutDiv></>;
 };
  
+SuggestCard.defaultProps = {
+  ...theme,
+}
+
 export default SuggestCard;
    
  

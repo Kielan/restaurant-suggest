@@ -57,22 +57,26 @@ function handleCardRef(node: any, id: string, cardRefs: Array<string>) {
     }
 }
 interface ISuggestCardEditProps {
+    activeFormRefId?: any;
+    addSuggestionBool: boolean;
+    formListRefs?: any;
     hookRef: any;
     initialValue: any;
     position: any;
     onCancelEdit: () => void;
-    onSubmitForm: () => void;
+    onSubmitForm: (suggestion: any) => void;
     formTextVal: string;
     onChangeFormInput: (val: string) => void;
-    onChangeFormVars: (val: any) => void;
+    onChangeFormVars?: (val: any) => void;
 }
 
 const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
+    activeFormRefId,
+    addSuggestionBool,
     formTextVal,
     hookRef,
     initialValue,
     onCancelEdit,
-    onChangeFormVars,
     onSubmitForm,
     position,
 }) => {
@@ -90,17 +94,10 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
     var suggestCardEditRefList = {
         'ampda92lf': { id: 'ampda92lf'},
     };
-
-    // async function onSubmit(e) {
-    //     e.preventDefault();
-    //     onSubmitForm();
-    // }
     
     function onChangePlacesAutoComplete(val: string) {
         setValue(val);
     }
-
-    console.log('kdl cardedit ', process.env.GOOGLE_MAPS_API);
 
     const renderSuggestions = () => data.map(suggestion => {
         const {
@@ -109,18 +106,13 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
         } = suggestion;
 
         async function onSelectFromSuggested(e: React.SyntheticEvent) {
-            console.log('onSelectFromSuggested ', e);
             e.preventDefault();
+            
             return new Promise(function(resolve, reject) { 
-                resolve(onChangeFormVars(suggestion))})
-                .then(() => onSubmitForm())
-                .then(() => {
-                    console.log('onsubmitformcalled');
-                    //return getSuggestions()
-                });
+                resolve(onSubmitForm(suggestion))
+            })
         }
 
-        console.log('kdl sggestcard edit FOCUSPAYATTENTIONKID', suggestion)
         return (
           <SuggestionLi
             key={id}
@@ -132,24 +124,26 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
     });
 
     return (
-        <EditorContainerDiv>
-            <EditorDiv ref={hookRef} position={position}>
-                <EditorCard>
-                    {/* <Form
-                        type='button'
-                        buttonText="Save"
-                        initialValue={initialValue}
-                        onClickSubmit={() => onSubmitForm()}
-                        placeholder={``}
-                        onClickCancel={onCancelEdit}
-                        value={value}
-                        setValue={onChangePlacesAutoComplete}
-                    >
-                        {status === 'OK' && <ul>{renderSuggestions()}</ul>}
-                    </Form> */}
-                </EditorCard>
-            </EditorDiv>
-        </EditorContainerDiv>
+        <>{addSuggestionBool === true &&/* formListRefs[activeFormRefId] && */(
+            <EditorContainerDiv>
+                <EditorDiv ref={hookRef} position={position}>
+                    <EditorCard>
+                        <Form
+                            type='button'
+                            buttonText="Save"
+                            initialValue={initialValue}
+                            onClickSubmit={() => onSubmitForm()}
+                            placeholder={``}
+                            onClickCancel={onCancelEdit}
+                            value={value}
+                            setValue={onChangePlacesAutoComplete}
+                        >
+                            {status === 'OK' && <ul>{renderSuggestions()}</ul>}
+                        </Form>
+                    </EditorCard>
+                </EditorDiv>
+            </EditorContainerDiv>
+        )}</>
     )
 }
 
