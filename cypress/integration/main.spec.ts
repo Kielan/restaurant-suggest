@@ -72,4 +72,8 @@ describe('Suggest Card Component API', () => {
     //    // console.log('check global window object ', window);
     //    //cy.assert(true).to.be.true;
     });
+
+    it('maps.googleapis.com/maps/api/js should be provided', () => {
+        expect(window.
+    });
 });

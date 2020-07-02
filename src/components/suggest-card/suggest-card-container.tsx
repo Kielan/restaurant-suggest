@@ -64,8 +64,10 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
   const [formTextVal, setFormTextVal] = React.useState<any>('');
   const [formSuggestions, setFormSuggestions] = React.useState<any>('');
   const [lastActiveUpdateItem, setLastActiveUpdateItem] = React.useState<any>();
+  
+  const testRef = React.createRef();
 
-  const [hookRef, setRef] = useHookWithRefCallback();
+  const [hookRef, setRef] = React.useState(testRef);//useHookWithRefCallback();
 
   var suggestCardRefList = {
     'e3p40592md': { id: 'e3p40592md'},
@@ -150,37 +152,45 @@ const SuggestCardContainer: React.FC<ISuggestCardContainerProps> = ({
     setFormListRefs(newRefList);
   }
 
-  return <><SuggestCard 
-            activeFormRefId={activeFormRefId}
-            addSuggestion={addSuggestion}
-            data={data}
-            formSuggestions={formSuggestions}
-            genRandom={genRandom}
-            handleFormRef={onChangeFormRef}
-          />
-          <SuggestCardEdit
-            activeFormRefId={activeFormRefId}
-            addSuggestionBool={addSuggestionBool}
-            formListRefs={formListRefs}
-            initialValue={""}
-            onCancelEdit={closeEditForm}
-            position={{
-              top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
-              left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
-            }}
-            onSubmitForm={onSubmitSuggestCardEdit}
-            hookRef={hookRef}
-            formTextVal={formTextVal}
-            onChangeFormInput={onChangeFormInput}
-          />
-          <SuggestCardDisplay
-              activeSuggestion={activeSuggestion}
-              hookRef={hookRef}
+  if (typeof window.window !== 'undefined' && window.google) {
+
+    return <><SuggestCard 
+              activeFormRefId={activeFormRefId}
+              addSuggestion={addSuggestion}
+              data={data}
+              formSuggestions={formSuggestions}
+              genRandom={genRandom}
+              handleFormRef={onChangeFormRef}
+            />
+            <SuggestCardEdit
+              activeFormRefId={activeFormRefId}
+              addSuggestionBool={addSuggestionBool}
+              formListRefs={formListRefs}
+              initialValue={""}
+              onCancelEdit={closeEditForm}
               position={{
                 top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
                 left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
               }}
-          /></>;
+              onSubmitForm={onSubmitSuggestCardEdit}
+              hookRef={testRef}
+              formTextVal={formTextVal}
+              onChangeFormInput={onChangeFormInput}
+            />
+            {/*<SuggestCardDisplay
+                activeSuggestion={activeSuggestion}
+                hookRef={hookRef}
+                position={{
+                  top: activeFormRefId  && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().top : null,
+                  left: activeFormRefId && formListRefs[activeFormRefId] && formListRefs[activeFormRefId].getBoundingClientRect ? formListRefs[activeFormRefId].getBoundingClientRect().left : null
+                }}
+              />*/}</>;
+
+  } else {
+
+    return null;
+  
+  }
 };
  
 export default SuggestCardContainer;

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Autocomplete from 'react-google-autocomplete';
 import SuggestCard from './suggest-card';
 import { Form } from '../form';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+//import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { usePlacesAutocomplete } from '../use-places-autocomplete';
+
 //import { ReactGooglePlacesSearch } from '../react-google-places-service';
 //`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API}&libraries=places`
 //``https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${textInput}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=${process.env.GOOGLE_MAPS_API}`
@@ -88,7 +89,8 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
         clearSuggestions
     } = usePlacesAutocomplete({
         requestOptions: { /* Define search scope here */ },
-        debounce: 300
+        debounce: 300,
+        googleMaps: hookRef,
     });
 
     var suggestCardEditRefList = {
@@ -96,6 +98,7 @@ const SuggestCardEdit: React.FC<ISuggestCardEditProps> = ({
     };
     
     function onChangePlacesAutoComplete(val: string) {
+        console.log('kdl cardedit setval ');
         setValue(val);
     }
 

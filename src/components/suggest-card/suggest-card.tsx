@@ -152,6 +152,7 @@ const SuggestCard: React.FC<ISuggestCardProps> = ({
   }
 
   return <>
+            <span>{`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API}&libraries=places`}</span>
             <FormContainer
               style={{ backgroundColor: "white" }}
               onClick={(e) => onPressAddSuggestion(e)}
